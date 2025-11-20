@@ -10,7 +10,13 @@ class ChatSocket {
                 user: socket.data.username,
                 text: msg
             });
-        })
+        });
+        socket.on("typing", () => {
+            socket.broadcast.emit("user_typing", socket.data.username);
+        });
+        socket.on("stop_typing", () => {
+            socket.broadcast.emit("user_stop_typing", socket.data.username);
+        });
     }
 }
 
