@@ -1,4 +1,8 @@
-const socket = io("http://localhost:3000/chat")
+const username = prompt("Digite seu nome:");
+
+const socket = io("http://localhost:3000/chat", {
+    auth: { username }
+});
 
 const ul = document.getElementById("messages");
 const form = document.getElementById("form");
@@ -19,7 +23,7 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const mensagem = {
-        user:"Usuario" + socket.id.substring(0,4),
+        user: username,
         text: input.value
     };
 

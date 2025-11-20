@@ -3,6 +3,7 @@ import OrdersSocket from './modules/websocket/orders.socket.js';
 require('dotenv').config()
 import 'reflect-metadata';
 import Websocket from './modules/websocket/websocket'; 
+import ChatSocket from './modules/websocket/chat.socket.js';
 
 import {
    createExpressServer,
@@ -25,9 +26,11 @@ const app = createExpressServer(routingControllerOptions);
 const httpServer = createServer(app);
 const io = Websocket.getInstance(httpServer);
 
-io.initializeHandles([
-    {path: '/chat', handler: new OrdersSocket()}
-])
+const chatNamespace = io.of("/chat"); // deve bater com o front
+chatNamespace.on("connection", (socket) => {
+    const chatHandler = new ChatSocket();
+    chatHandler.handleConnection(socket);
+});
 
 httpServer.listen(port, () => {
    console.log(`This is working in port ${port}`);
