@@ -1,34 +1,28 @@
-const socket = io("http://localhost:3000/orders");
+const socket = io("http://localhost:3000/chat")
 
-socket.on('connect', () => {
-    console.log("connected");
-    socket.emit('request_orders');
+const ul = document.getElementById("messages");
+const form = document.getElementById("form");
+const input = document.getElementById("msg");
+
+socket.on("connect",()=>{
+    console.log("Conectou ao servidor!");
 });
 
-socket.on('orders_updated', (payload) => {
-    console.log("RECEIVED:", payload);
-    populateTable(payload.data);
-});
+socket.on("message", (msg)=> {
+    const li = document.createElement("li");
+    li.classList.add("list-group-item");
+    li.textContent = `${msg.user}:${msg.text}`; //Usuario e mensagem
+    ul.appendChild(li);
+})
 
-socket.on('disconnect', () => {
-    console.error('algo deu errado');
-});
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-function populateTable(data) {
-    const tbody = document.querySelector('#orders-table tbody');
-    tbody.innerHTML = ""; 
+    const mensagem = {
+        user:"Usuario" + socket.id.substring(0,4),
+        text: input.value
+    };
 
-    data.forEach(order => {
-        tbody.insertAdjacentHTML('beforeend', createTableRow(order));
-    });
-}
-
-function createTableRow(order) {
-    return `
-    <tr>
-        <th scope="row">${order.id}</th>
-        <td>${order.date}</td>
-        <td>${order.total}</td>
-        <td>${order.status}</td>
-    </tr>`;
-}
+    socket.emit("message",mensagem);
+    input.value = "";
+})

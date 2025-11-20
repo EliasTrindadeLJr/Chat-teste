@@ -1,10 +1,9 @@
 import { Socket } from "socket.io";
 import MySocketInterface from "./mySocketInterface";
-import OrdersService from "../../libs/order.service";
 
 class OrdersSocket implements MySocketInterface {
     handleConnection(socket: Socket){
-        console.log("Client connected to /orders");
+        console.log("Usuario conectado ao chat /orders");
         socket.emit('ping','Hi iam a live socket connection');
     }
 

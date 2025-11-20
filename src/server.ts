@@ -26,7 +26,7 @@ const httpServer = createServer(app);
 const io = Websocket.getInstance(httpServer);
 
 io.initializeHandles([
-    {path: '/orders', handler: new OrdersSocket()}
+    {path: '/chat', handler: new OrdersSocket()}
 ])
 
 httpServer.listen(port, () => {
